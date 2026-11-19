@@ -19,9 +19,14 @@
 - `CodeNode`: `id`, `label`, `kind` (`file` | `module` | `symbol`), `path`, `summary`, `risk_level`
 - `CodeEdge`: `source`, `target`, `relation` (`imports` | `calls` | `extends`)
 - `ImpactReport`: `target_id`, `direct_impacts`, `transitive_impacts`, `risk_score`, `notes`
-- `AskResponse`: `answer`, `referenced_nodes`, `agent_trace`
+- `AskResponse`: `answer`, `referenced_nodes`, `agent_trace` *(optional — the UI may surface this as a collapsible debug panel; omit from the response entirely if the UI does not implement it)*
 
 ## 3. Error Handling & Demo Resilience
 - Validate URLs and request payloads via Pydantic schemas (`400`/`422` for bad inputs).
-- Include a bundled multi-file sample project in `backend/` so end-to-end analysis and impact tracing work offline or during rate limits.
+- Include a bundled multi-file sample project in `backend/` so end-to-end analysis and impact tracing work offline or during rate limits. The sample graph is pre-computed (static JSON) so loading it requires no parsing and completes in under 2 seconds.
 - Return structured fallback responses rather than unhandled 500s when external services fail.
+
+## 4. Deployment Targets
+- **Backend:** Deploy FastAPI to **Railway** or **Render** (free tier). No Docker required for MVP; a `requirements.txt` + `Procfile` (or Render's native Python buildpack) is sufficient.
+- **Frontend:** Deploy Next.js to **Vercel** (free tier). Connect `NEXT_PUBLIC_API_URL` env var to the live backend URL.
+- Both targets must be verified live (health check passes) before the demo is recorded.
