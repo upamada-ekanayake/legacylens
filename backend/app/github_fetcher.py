@@ -120,7 +120,7 @@ async def _fetch(repo_url: str, max_files: int, max_depth: int) -> GraphPayload:
     )
 
 
-async def fetch_github_graph(repo_url: str, max_files: int = 50, max_depth: int = 3) -> GraphPayload:
+async def fetch_github_graph(repo_url: str, max_files: int = 50, max_depth: int = 4) -> GraphPayload:
     """Fetch via the GitHub Contents API (no git clone) and build the graph within a 10s budget."""
     try:
         return await asyncio.wait_for(_fetch(repo_url, max_files, max_depth), timeout=TOTAL_TIMEOUT_SECONDS)

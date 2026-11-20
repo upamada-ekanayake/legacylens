@@ -9,7 +9,7 @@ Developers onboarding onto unfamiliar or legacy repositories struggle to underst
 - **As a** developer, **I want to** provide a public GitHub repository URL (or load a built-in sample) **so that** I can analyze a codebase quickly and reliably.
 - **Acceptance Criteria:**
   - Accepts a valid public GitHub repository URL and fetches supported source files (`.py`, `.ts`, `.js`) using the **GitHub Contents API** (no `git clone`). Caps ingestion at **50 source files**; if more exist, the first 50 (breadth-first) are used and a notice is shown.
-  - Import/call traversal depth is capped at **3 levels** to prevent runaway graphs on large repos.
+  - Directory traversal depth is capped at **4** (root = 0), and ingestion is capped at **50 files**, to prevent runaway graphs on large repos.
   - Returns a parsed graph within **10 seconds** for repos at or under 50 supported files.
   - A **"Load Sample"** button loads a bundled Python + TypeScript multi-file project. The backend returns a pre-computed graph without any network call, completing in **under 2 seconds**.
   - Rejects invalid, private, or unreachable URLs with a clear, actionable error message.

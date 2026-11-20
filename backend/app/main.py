@@ -4,9 +4,17 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
+from .agent_engine import run_codebase_agent
 from .github_fetcher import FetchError, fetch_github_graph
 from .graph_engine import compute_blast_radius
-from .models import AnalyzeRequest, GraphPayload, ImpactReport, ImpactRequest
+from .models import (
+    AnalyzeRequest,
+    AskRequest,
+    AskResponse,
+    GraphPayload,
+    ImpactReport,
+    ImpactRequest,
+)
 from .sample_data import get_sample_graph
 
 load_dotenv()
@@ -33,7 +41,7 @@ async def analyze_codebase(payload: AnalyzeRequest) -> GraphPayload:
         return get_sample_graph()
 
     try:
-        return await fetch_github_graph(payload.repo_url, max_files=50, max_depth=3)
+        return await fetch_github_graph(payload.repo_url, max_files=50, max_depth=4)
     except FetchError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -51,3 +59,13 @@ async def analyze_impact(payload: ImpactRequest) -> ImpactReport:
         return compute_blast_radius(target_id=payload.target_id, nodes=nodes, edges=edges)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown target_id: {payload.target_id}") from exc
+
+
+@app.post("/api/ask", response_model=AskResponse)
+async def ask_codebase(payload: AskRequest) -> AskResponse:
+    return await run_codebase_agent(
+        question=payload.question,
+        graph=payload.graph,
+        selected_node_id=payload.selected_node_id,
+        impact_report=payload.impact_report,
+    )

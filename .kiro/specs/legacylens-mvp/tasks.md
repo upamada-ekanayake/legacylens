@@ -9,7 +9,7 @@
 
 - [ ] **Task 3: Backend Parser & Blast-Radius Engine (`backend/`)**
   - Set up FastAPI project structure and Pydantic models.
-  - Implement AST/code parser (tree-sitter or ast module) with GitHub Contents API ingestion: cap 50 files, max import traversal depth 3, circular-import detection.
+  - Implement AST/code parser (tree-sitter or ast module) with GitHub Contents API ingestion: cap 50 files, directory traversal depth 4, circular-import detection.
   - Implement directed dependency/impact calculator.
   - Bundle a pre-computed sample graph (Python + TypeScript multi-file project) as static JSON; expose it via the sample mode path.
   - Add **smoke-test assertions** (pytest, two tests only): (1) parser returns a non-empty graph for the bundled sample project; (2) blast-radius endpoint returns a non-empty impact list for a known node in the sample graph.

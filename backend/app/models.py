@@ -50,3 +50,18 @@ class ImpactReport(BaseModel):
     transitive_impacts: list[str] = Field(default_factory=list)
     risk_score: int = 0
     notes: str = ""
+
+
+class AskRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=1000)
+    graph: Optional[GraphPayload] = None
+    selected_node_id: Optional[str] = None
+    impact_report: Optional[ImpactReport] = None
+
+
+class AskResponse(BaseModel):
+    answer: str
+    referenced_nodes: list[str] = Field(default_factory=list)
+    agent_trace: Optional[list[str]] = None
+    available: bool = True  # False only when no LLM API key is configured
+    error: Optional[str] = None  # set when the LLM call failed; answer then holds a readable message
